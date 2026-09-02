@@ -1,5 +1,7 @@
 package modelo;
 
+import modelo.EstadoProcesso;
+
 public class Processo {
     private String pid; //identificador processo
     private String nomeProcesso; //nome do processo
@@ -18,7 +20,7 @@ public class Processo {
     //variaveis de controle dinamixas
     private int tempoRestante; //tempo de cpu restante
     private int tempoBloqRestante; //tempo bloqueado restante
-    private int EstadoProcesso estado; //estado atual do processo
+    private EstadoProcesso estado; //estado atual do processo
     
     //variaveis controle métricas
     private int tempoInicio = -1;
