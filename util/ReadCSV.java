@@ -21,11 +21,11 @@ public class ReadCSV {
                 String pid = info[0].trim();
                 String nomeProcesso = info[1].trim();
                 int tempoChegada = Integer.parseInt(info[2].trim());
-                int tempoCpuTotal = Integer.parseInt(info[3].trim());
+                int tempoExecucao = Integer.parseInt(info[3].trim());
                 int prioridade = Integer.parseInt(info[4].trim());
                 String tipoProcesso = info[5].trim();
                 int operacaoEs = Integer.parseInt(info[6].trim());
-                double probabilidadeEs = Double.parseDouble(info[7].trim());
+                double probEs = Double.parseDouble(info[7].trim());
                 double mediaEs = Double.parseDouble(info[8].trim());
                 int duracaoEs = Integer.parseInt(info[9].trim());
                 int filaSugerida = Integer.parseInt(info[10].trim());
@@ -33,8 +33,8 @@ public class ReadCSV {
 
                 //cria novo processo e adiciona na lista
                 Processo p = new Processo(
-                    pid, nomeProcesso, tempoChegada, tempoCpuTotal,
-                    prioridade, tipoProcesso, operacaoEs, probabilidadeEs, 
+                    pid, nomeProcesso, tempoChegada, tempoExecucao,
+                    prioridade, tipoProcesso, operacaoEs, probEs, 
                     mediaEs, duracaoEs, filaSugerida, quantumSugerido);
 
                 listaProcessos.add(p);
