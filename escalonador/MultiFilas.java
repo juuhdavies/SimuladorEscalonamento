@@ -53,7 +53,7 @@ public class MultiFilas implements Escalonador {
         while(!fila2.isEmpty()) {
             Processo p = fila2.poll();
             int tempoEspera = tempoAtual - p.getTempoChegadaFila();
-            if (p.getTempoEspera() > 40) { // Se o processo está esperando há mais de 10 unidades de tempo
+            if (tempoEspera > 40) { // Se o processo está esperando há mais de 10 unidades de tempo
                 p.setFilaSugerida(1); // Promove para a fila 1
                 fila1.add(p);
             } else {
