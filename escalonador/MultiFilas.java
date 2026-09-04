@@ -45,6 +45,7 @@ public class MultiFilas implements Escalonador {
             if (tempoEspera > 20) { // Se o processo está esperando há mais de 20 unidades de tempo
                 p.setFilaSugerida(2); // Promove para a fila 2
                 novaFila2.add(p);
+                System.out.println("[Tempo " + tempoAtual + "] Processo " + p.getNomeProcesso() + " (PID: " + p.getPid() + ") promovido da fila 3 para a fila 2 devido à inanição.");
             } else {
                 novaFila3.add(p);
             }
@@ -56,6 +57,7 @@ public class MultiFilas implements Escalonador {
             if (tempoEspera > 40) { // Se o processo está esperando há mais de 10 unidades de tempo
                 p.setFilaSugerida(1); // Promove para a fila 1
                 fila1.add(p);
+                System.out.println("[Tempo " + tempoAtual + "] Processo " + p.getNomeProcesso() + " (PID: " + p.getPid() + ") promovido da fila 2 para a fila 1 devido à inanição.");
             } else {
                 novaFila2.add(p);
             }

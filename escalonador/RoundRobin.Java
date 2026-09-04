@@ -48,6 +48,7 @@ public class RoundRobin implements Escalonador {
         else if (processoAtual.getTempoRestante() > 0) {
             filaProntos.add(processoAtual); // se ainda tem quantum restante, adiciona o processo de volta à fila de prontos
             processoAtual.setEstado(EstadoProcesso.PRONTO); // Atualiza o estado do processo para PRONTO
+            processoAtual.setTempoChegadaFila(tempoAtual + tempoExecucao); // Atualiza o tempo de chegada na fila do processo
         } else {
             processoAtual.setEstado(EstadoProcesso.FINALIZADO);
             processoAtual.setTempoConclusao(tempoAtual + tempoExecucao); // Define o tempo de conclusão do processo
