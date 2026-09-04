@@ -34,6 +34,38 @@ public class MultiFilas implements Escalonador {
         return !fila1.isEmpty() || !fila2.isEmpty() || !fila3.isEmpty();
     }
 
+    //método para promover processos da fila3 para 2 e da 2 para 3 caso estejam esperando a muito tempo
+    private void verificarInanição(int tempoAtual) {
+        Queue<Processo> novaFila2 = new LinkedList<>();
+        Queue<Processo> novaFila3 = new LinkedList<>();
+
+        while(!fila3.isEmpty()) {
+            Processo p = fila3.poll();
+            int tempoEspera = tempoAtual - p.getTempoChegadaFila();
+            if (tempoEspera > 20) { // Se o processo está esperando há mais de 20 unidades de tempo
+                p.setFilaSugerida(2); // Promove para a fila 2
+                novaFila2.add(p);
+            } else {
+                novaFila3.add(p);
+            }
+        }
+
+        while(!fila2.isEmpty()) {
+            Processo p = fila2.poll();
+            int tempoEspera = tempoAtual - p.getTempoChegadaFila();
+            if (p.getTempoEspera() > 40) { // Se o processo está esperando há mais de 10 unidades de tempo
+                p.setFilaSugerida(1); // Promove para a fila 1
+                fila1.add(p);
+            } else {
+                novaFila2.add(p);
+            }
+            
+        }
+
+        fila3 = novaFila3;
+        fila2 = novaFila2;
+    }
+
     @Override
     public Processo proximoProcesso(int tempoAtual) {
 
@@ -44,6 +76,8 @@ public class MultiFilas implements Escalonador {
         if (!temProcessoPendente()) {
             return null;
         }
+
+        verificarInanição(tempoAtual); // Verifica se há processos que precisam ser promovidos
 
         Processo processoAtual = null;
 
@@ -76,8 +110,14 @@ public class MultiFilas implements Escalonador {
         tempoExecucao = Math.min(processoAtual.getTempoRestante(), quantum);
         processoAtual.setTempoRestante(processoAtual.getTempoRestante() - tempoExecucao);
 
+        if(processoAtual.isOperacaoES() && Math.random() < processoAtual.getProbES()) {
+            //se o processo realiza operação de E/S e a probabilidade for atendida, bloqueia o processo
+            processoAtual.setEstado(EstadoProcesso.BLOQUEADO);
+            processoAtual.setTempoBloqRestante(processoAtual.getDuracaoES());
+        }
 
-        if(processoAtual.getTempoRestante() > 0) {
+
+        else if(processoAtual.getTempoRestante() > 0) {
             //se ainda tem tempo restante, adiciona de volta na fila correspondente
             switch (origemFila) {
                 case 1:
@@ -91,6 +131,7 @@ public class MultiFilas implements Escalonador {
                     break;
             }
             processoAtual.setEstado(EstadoProcesso.PRONTO);
+            processoAtual.setTempoChegadaFila(tempoAtual + tempoExecucao); // Atualiza o tempo de chegada na fila do processo
         } else {
             processoAtual.setEstado(EstadoProcesso.FINALIZADO);
             processoAtual.setTempoConclusao(tempoAtual + tempoExecucao);
@@ -99,4 +140,6 @@ public class MultiFilas implements Escalonador {
         return processoAtual;
 
     }
+
+
 }

@@ -21,6 +21,7 @@ public class Processo {
     private int tempoRestante; //tempo de cpu restante
     private int tempoBloqRestante; //tempo bloqueado restante
     private EstadoProcesso estado; //estado atual do processo
+    private int tempoChegadaFila; //tempo de chegada na fila atual
     
     //variaveis controle métricas
     private int tempoInicio = -1;
@@ -86,6 +87,7 @@ public class Processo {
     public int getTempoConclusao() { return tempoConclusao; }
     public int getPrimeiroTempoCPU() { return primeiroTempoCPU; }
     public int getTempoTotalES() { return tempoTotalES; }
+    public int getTempoChegadaFila() { return tempoChegadaFila; }
 
     //setters
 
@@ -119,5 +121,13 @@ public class Processo {
 
     public void somarTempoES(int tempo) {
         this.tempoTotalES += tempo;
+    }
+
+    public void setFilaSugerida(int filaSugerida) {
+        this.filaSugerida = filaSugerida;
+    }
+
+    public void setTempoChegadaFila(int tempoChegadaFila) {
+        this.tempoChegadaFila = tempoChegadaFila;
     }
 }

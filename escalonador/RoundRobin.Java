@@ -37,8 +37,15 @@ public class RoundRobin implements Escalonador {
         int tempoExecucao = Math.min(processoAtual.getTempoRestante(), quantum); // Determina o tempo de execução com base no quantum e no tempo restante do processo
         processoAtual.setTempoRestante(processoAtual.getTempoRestante() - tempoExecucao); // Atualiza o tempo restante do processo
 
+        if(processoAtual.isOperacaoES() && Math.random() < processoAtual.getProbES()) {
+            //se o processo realiza operação de E/S e a probabilidade for atendida, bloqueia o processo
+            processoAtual.setEstado(EstadoProcesso.BLOQUEADO);
+            processoAtual.setTempoBloqRestante(processoAtual.getDuracaoES());
+        }
+
+
         // verifica se o processo ainda tem tempo restante para execução
-        if (processoAtual.getTempoRestante() > 0) {
+        else if (processoAtual.getTempoRestante() > 0) {
             filaProntos.add(processoAtual); // se ainda tem quantum restante, adiciona o processo de volta à fila de prontos
             processoAtual.setEstado(EstadoProcesso.PRONTO); // Atualiza o estado do processo para PRONTO
         } else {
