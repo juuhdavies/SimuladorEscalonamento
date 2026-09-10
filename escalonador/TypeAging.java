@@ -81,6 +81,9 @@ public class TypeAging implements Escalonador {
         if(processoAtual.getPrimeiroTempoCPU() == -1) {
             processoAtual.setPrimeiroTempoCPU(processoAtual.getTempoChegadaFila()); 
         }
+        if(processoAtual.getTempoInicio() ==-1){
+            processoAtual.setTempoInicio(tempoAtual);
+        }
         
         int quantum = processoAtual.getQuantumSugerido(); // Obtém o quantum sugerido pelo processo
         int tempoExecucao = Math.min(processoAtual.getTempoRestante(), quantum); 

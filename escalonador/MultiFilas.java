@@ -106,6 +106,9 @@ public class MultiFilas implements Escalonador {
         if (processoAtual.getPrimeiroTempoCPU() == -1) {
             processoAtual.setPrimeiroTempoCPU(tempoAtual);
         }
+        if(processoAtual.getTempoInicio() == -1) {
+            processoAtual.setTempoInicio(tempoAtual);
+        }
 
         processoAtual.setEstado(EstadoProcesso.EXECUTANDO);
 

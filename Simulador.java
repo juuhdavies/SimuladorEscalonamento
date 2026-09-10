@@ -5,6 +5,8 @@ import escalonador.RoundRobin;
 import escalonador.MultiFilas;
 import util.PosEscalonamento;
 import util.ReadCSV;
+import util.Relatorio;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,9 @@ public class Simulador {
 
         int tempoAtual = 0; //tempo atual da simulação
         int indexProcessosEntrada = 0; // índice para controlar a entrada de processos na simulação
+        int trocasContexto = 0; // contador de trocas de contexto
+        String ultimoPID = null; // PID do último processo executado
+        List<String> ordemExecucaoUnica = new ArrayList<>();
 
         while(indexProcessosEntrada < processos.size() || escalonador.temProcessoPendente() || !bloqueados.isEmpty()) {
             //adiciona processos que chegaram no tempo atual
@@ -50,6 +55,18 @@ public class Simulador {
             Processo processoAtual = escalonador.proximoProcesso(tempoAtual);
 
             if(processoAtual != null) {
+
+                if(ultimoPID != null && !ultimoPID.equals(processoAtual.getPid())) {
+                    trocasContexto++;
+                }
+
+                //registra a ordem de execução dos processos, garantindo que cada processo seja registrado apenas uma vez
+                if(processoAtual.getTempoInicio() == tempoAtual) {
+                    ordemExecucaoUnica.add(processoAtual.getNomeProcesso() + " (PID: " + processoAtual.getPid() + ")");
+                }
+                
+                ultimoPID = processoAtual.getPid();
+
                 historicoGantt.add(new PosEscalonamento(tempoAtual, processoAtual.getPid(), processoAtual.getNomeProcesso(), processoAtual.getEstado())); //adiciona ao histórico Gantt
 
                 System.out.println("[Tempo " + tempoAtual + "] Executando processo: " + processoAtual.getNomeProcesso() 
@@ -77,8 +94,18 @@ public class Simulador {
             }
             else{
                 tempoAtual++;
+                ultimoPID = null; // Nenhum processo está sendo executado, então não há PID atual
             }
+            
         }
+
+        Relatorio.gerarRelatorio(
+            finalizados, 
+            nomeEscalonador,
+            historicoGantt, 
+            ordemExecucaoUnica, 
+            trocasContexto
+        );
     }
 
     public static void main(String[] args) {
@@ -96,7 +123,7 @@ public class Simulador {
         System.out.println("Escolha o algoritmo de simulação:");
         System.out.println("1 - Round Robin");
         System.out.println("2 - MultiFilas");
-        System.out.println("3 - IMPLEMENTAR MÉTODO PROPRIO");
+        System.out.println("3 - Método Próprio: TypeAging");
         System.out.print("Digite sua opção: ");
 
         int opcao = scanner.nextInt();
@@ -109,8 +136,7 @@ public class Simulador {
                 simular(caminhoCSV, new MultiFilas(), "Múltiplas Filas");
                 break;
             case 3:
-                simular(caminhoCSV, new RoundRobin(), "Round-Robin");
-                simular(caminhoCSV, new MultiFilas(), "Múltiplas Filas");
+                simular(caminhoCSV, new escalonador.TypeAging(), "Type Aging");
                 break;
             default:
                 System.out.println("Opção inválida!");

@@ -31,6 +31,9 @@ public class RoundRobin implements Escalonador {
         if(processoAtual.getPrimeiroTempoCPU() == -1) {
             processoAtual.setPrimeiroTempoCPU(tempoAtual); // Define o primeiro tempo de CPU se ainda não foi definido
         }
+        if(processoAtual.getTempoInicio() == -1) {
+            processoAtual.setTempoInicio(tempoAtual); // Define o tempo de início se ainda não foi definido
+        }
 
         processoAtual.setEstado(EstadoProcesso.EXECUTANDO); // Atualiza o estado do processo para EXECUTANDO
 
